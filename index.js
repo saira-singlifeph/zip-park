@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const swaggerDocs = require('./src/services/utils/swagger.util');
+const logger = require('./src/services/utils/logger.utils');
 
 require('dotenv').config();
 
@@ -20,15 +21,15 @@ mongoose.connect(databaseUrl, {
 
 const { connection } = mongoose;
 connection.once('open', () => {
-  console.log('MongoDB connection is now established successfully');
+  logger.info('MongoDB connection is now established successfully');
 });
 
 // ROUTES
 const parkRoutes = require('./src/modules/parking-system/park.module');
 
-app.use('/api/v1/parks', parkRoutes);
+app.use('/api/v1/car-parking', parkRoutes);
 
 app.listen(port, () => {
-  console.log('Running on the port:', port);
+  logger.info(`Running on the port: ${port}`);
   swaggerDocs(app);
 });

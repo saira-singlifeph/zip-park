@@ -1,11 +1,12 @@
-const ParkingSlots = require('../models/parking-slot.model');
-const ParkingDetails = require('../models/park-details.model');
-
+const ParkingSlotsModel = require('../models/parking-slot.model');
+const ParkingDetailsModel = require('../models/park-details.model');
 const generateReferenceNumber = require('../../../services/utils/generate-reference-num.util');
+const logger = require('../../../services/utils/logger.utils');
 
-const parkCarController = async ({ vehicleType }) => {
+const processParking = async ({ vehicleType }) => {
+  logger.info(`processParking start - ${vehicleType}`);
   try {
-    const slots = await ParkingSlots.find();
+    const slots = await ParkingSlotsModel.find();
 
     for (let level = 0; slots.length > level; level += 1) {
       const { available, used = 1, _id } = slots[level];
@@ -18,7 +19,7 @@ const parkCarController = async ({ vehicleType }) => {
         const idString = _id.toString();
 
         /* eslint-disable no-await-in-loop */
-        await ParkingSlots.findOneAndUpdate({ _id: idString }, {
+        await ParkingDetailsModel.findOneAndUpdate({ _id: idString }, {
           available: (available - 1),
           used: usedSlots,
         });
@@ -27,27 +28,36 @@ const parkCarController = async ({ vehicleType }) => {
         const parkingSlot = `F-${floorLevel} ${usedSlots}`;
 
         /* eslint-disable no-await-in-loop */
-        const newParkingRecord = new ParkingDetails({
+        const newParkingRecord = new ParkingDetailsModel({
+          _id: refNo,
           vehicleType,
+          parkingSlot: floorLevel,
           parkingReferenceNo: refNo,
-          parkingSlot,
         });
+
+        logger.info(`processParking newParkingRecord - ${newParkingRecord}`);
 
         await newParkingRecord.save();
 
-        return {
+        const processedParking = {
           floor: floorLevel,
           parkingSlot,
           referenceNo: refNo,
         };
+
+        logger.info(`processParking response - ${JSON.stringify(processedParking)}`);
+
+        return { ...processedParking };
       }
     }
 
+    // return 0 if no available parking slots now
     return {
       floor: 0,
       parkingSlot: 0,
     };
   } catch (error) {
+    logger.error(`processParking response - ${JSON.stringify(error.message)}`);
     return {
       floor: 0,
       parkingSlot: 0,
@@ -56,4 +66,4 @@ const parkCarController = async ({ vehicleType }) => {
   }
 };
 
-module.exports = parkCarController;
+module.exports = processParking;

@@ -2,12 +2,16 @@ const mongoose = require('mongoose');
 
 const ParkingDetailsSchema = mongoose.Schema(
   {
+    _id: {
+      type: String,
+      require: true,
+    },
     startTime: {
       type: Date,
       require: true,
       default: Date.now(),
     },
-    endTime: {
+    parkedHours: {
       type: Date,
     },
     vehicleType: {
