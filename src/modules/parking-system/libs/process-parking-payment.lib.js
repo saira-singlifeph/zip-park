@@ -1,11 +1,11 @@
 const moment = require('moment');
-const ParkingDetailsModel = require('../models/park-details.model');
-const ParkingSlotsModel = require('../models/parking-slot.model');
-const { PAYMENT_TYPES } = require('../constant');
+const ParkingAreaModel = require('../models/parking-area.model');
+const ParkingDetailsModel = require('../models/parking-details.model');
+const { PAYMENT_TYPES } = require('../configurations');
 const logger = require('../../../services/utils/logger.utils');
 
 const processParkPayment = async (payload) => {
-  logger.log(`processParkPayment start - ${JSON.stringify(payload)}`);
+  logger.info(`processParkPayment start - ${JSON.stringify(payload)}`);
   try {
     const {
       paymentMode, amountToPay, referenceNo, parkedHours,
@@ -20,8 +20,9 @@ const processParkPayment = async (payload) => {
 
     const currentDate = moment().format('YYMMDDHHMMSS');
     const paymentRef = `${currentDate}-${referenceNo}`;
+
     // store the payment details
-    const parkingDetails = await ParkingDetailsModel.findOneAndUpdate({ _id: referenceNo }, {
+    const updatedParkingDetails = await ParkingDetailsModel.updateParkingRecord(referenceNo, {
       parkedHours,
       amountToPay,
       isPaid: true,
@@ -29,23 +30,20 @@ const processParkPayment = async (payload) => {
       paymentReferenceNo: paymentRef,
     });
 
-    logger.log(`processParkPayment updated parkingDetails - ${JSON.stringify(parkingDetails)}`);
+    logger.info(`processParkPayment updated parkingDetails - ${JSON.stringify(updatedParkingDetails)}`);
 
-    const level = +parkingDetails.parkingSlot;
-    // update the parking slosts
-    const parkingSlotDetails = await ParkingSlotsModel.find({ level });
-    const { available, used, _id } = parkingSlotDetails[0];
+    const parkingArea = await ParkingAreaModel
+      .getParkingAreaByLevel(updatedParkingDetails.parkingLevel);
 
-    const newUsedCount = (used - 1);
-    const newAvailableCount = (available + 1);
-
-    const id = _id.toString();
-    await ParkingSlotsModel.findOneAndUpdate({ _id: id }, {
-      used: newUsedCount,
-      available: newAvailableCount,
+    // eslint-disable-next-line no-underscore-dangle
+    const id = parkingArea._id.toString();
+    const updatedParkingArea = await ParkingAreaModel.updateParkingArea(id, {
+      vacant: (parkingArea.vacant + 1),
+      occupied: (parkingArea.occupied - 1),
     });
+    logger.info(`processParkPayment updated updatedParkingArea - ${JSON.stringify(updatedParkingArea)}`);
 
-    logger.log(`processParkPayment success - ${JSON.stringify(parkingDetails)}`);
+    logger.info(`processParkPayment success - ${JSON.stringify(updatedParkingDetails)}`);
     return {
       status: 200,
       message: 'Paid',

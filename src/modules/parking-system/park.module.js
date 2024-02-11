@@ -4,6 +4,7 @@ const router = require('express').Router();
 const processParking = require('./libs/process-car-parking.lib');
 const createParkingPayment = require('./libs/create-parking-payment.lib');
 const processParkingPayment = require('./libs/process-parking-payment.lib');
+const createParkingArea = require('./libs/create-parking-area.lib');
 
 /**
  * @swagger
@@ -101,4 +102,8 @@ router.post('/process-payment', async (req, res) => {
   return res.send({ status: 200, data: response });
 });
 
+router.post('/create-parking-area', async (req, res) => {
+  const response = await createParkingArea(req.body);
+  res.send({ status: response.status, data: response.message });
+});
 module.exports = router;

@@ -1,60 +1,46 @@
-const ParkingSlotsModel = require('../models/parking-slot.model');
-const ParkingDetailsModel = require('../models/park-details.model');
+const ParkingAreaModel = require('../models/parking-area.model');
+const ParkingDetailsModel = require('../models/parking-details.model');
 const generateReferenceNumber = require('../../../services/utils/generate-reference-num.util');
 const logger = require('../../../services/utils/logger.utils');
 
 const processParking = async ({ vehicleType }) => {
   logger.info(`processParking start - ${vehicleType}`);
   try {
-    const slots = await ParkingSlotsModel.find();
+    const availableParking = await ParkingAreaModel.getAvailableSlot();
+    logger.info(`processParking fetched available slot - ${JSON.stringify(availableParking)}`);
 
-    for (let level = 0; slots.length > level; level += 1) {
-      const { available, used = 1, _id } = slots[level];
-
-      if (available) {
-        const usedSlots = (used + 1);
-        const floorLevel = (level + 1);
-
-        // update the available and used values
-        const idString = _id.toString();
-
-        /* eslint-disable no-await-in-loop */
-        await ParkingDetailsModel.findOneAndUpdate({ _id: idString }, {
-          available: (available - 1),
-          used: usedSlots,
-        });
-
-        const refNo = generateReferenceNumber();
-        const parkingSlot = `F-${floorLevel} ${usedSlots}`;
-
-        /* eslint-disable no-await-in-loop */
-        const newParkingRecord = new ParkingDetailsModel({
-          _id: refNo,
-          vehicleType,
-          parkingSlot: floorLevel,
-          parkingReferenceNo: refNo,
-        });
-
-        logger.info(`processParking newParkingRecord - ${newParkingRecord}`);
-
-        await newParkingRecord.save();
-
-        const processedParking = {
-          floor: floorLevel,
-          parkingSlot,
-          referenceNo: refNo,
-        };
-
-        logger.info(`processParking response - ${JSON.stringify(processedParking)}`);
-
-        return { ...processedParking };
-      }
+    if (!availableParking) {
+      // return 0 if no available parking slots now
+      return {
+        floor: 0,
+        parkingSlot: 0,
+        referenceNo: 0,
+      };
     }
 
-    // return 0 if no available parking slots now
+    // update parking areas available and occupied counts
+    // eslint-disable-next-line no-underscore-dangle
+    const parkingId = availableParking._id.toString();
+
+    const updateParkingCount = await ParkingAreaModel
+      .updateParkingArea(parkingId, {
+        occupied: (availableParking.occupied + 1),
+        vacant: (availableParking.vacant - 1),
+      });
+    logger.info(`processParking update parking info - ${JSON.stringify(updateParkingCount)}`);
+
+    const refNo = generateReferenceNumber();
+
+    const newParking = await ParkingDetailsModel.insertParkingRecord({
+      vehicleType,
+      parkingLevel: availableParking.level,
+      parkingReferenceNo: refNo,
+    });
+
+    logger.info(`processParking added new parking details - ${JSON.stringify(newParking)}`);
     return {
-      floor: 0,
-      parkingSlot: 0,
+      floor: availableParking.level,
+      referenceNo: refNo,
     };
   } catch (error) {
     logger.error(`processParking response - ${JSON.stringify(error.message)}`);

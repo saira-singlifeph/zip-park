@@ -33,10 +33,6 @@ const ParkingDetailsSchema = mongoose.Schema(
       type: String,
       require: true,
     },
-    parkingSlot: {
-      type: String,
-      require: true,
-    },
     paymentReferenceNo: {
       type: String,
       default: null,
@@ -44,7 +40,11 @@ const ParkingDetailsSchema = mongoose.Schema(
     paymentType: {
       type: String,
       enum: ['GCash', 'Cash'],
-      default: 'GCash',
+      default: 'Cash',
+    },
+    parkingLevel: {
+      type: Number,
+      require: true,
     },
   },
   {

@@ -1,9 +1,9 @@
 const moment = require('moment');
-const ParkingDetailsModel = require('../models/park-details.model');
-const ConfigurationsModel = require('../models/configurations.model');
+const ParkingDetailsModel = require('../schema/parking-details.schema');
+const ConfigurationsModel = require('../schema/configurations.schema');
 
 // const createSource = require('../../magpie/create-source.payment');
-const { PAYMENT_TYPES } = require('../constant');
+const { PAYMENT_TYPES } = require('../configurations');
 const logger = require('../../../services/utils/logger.utils');
 
 const { CASH, CASHLESS } = PAYMENT_TYPES;
