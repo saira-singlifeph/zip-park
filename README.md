@@ -276,6 +276,8 @@ curl --location 'localhost:5000/api/v1/car-parking/create-access' \
 ```
 
 ## Database Schema
+
+
 ### Building Access Collection
 
 The `BuildingAccess` collection stores information about access points within a building, including entrances and exits.
@@ -318,7 +320,6 @@ The `BuildingAccess` collection stores information about access points within a 
   "updatedAt": "2022-02-12T12:00:00.000Z"
 }
 ```
-Here's the database schema described in the README format:
 
 ---
 
