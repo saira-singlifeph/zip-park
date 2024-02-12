@@ -277,6 +277,7 @@ curl --location 'localhost:5000/api/v1/car-parking/create-access' \
 
 ## Database Schema
 
+![screenshot](https://github.com/saira-singlifeph/zip-park/blob/main/diagrams/Screen%20Shot%202024-02-12%20at%209.56.13%20AM.png)
 
 ### Building Access Collection
 
