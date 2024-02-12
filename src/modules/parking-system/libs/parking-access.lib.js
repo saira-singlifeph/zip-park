@@ -1,4 +1,4 @@
-const BuildingAccessModel = require('../models/building-access.schema');
+const BuildingAccessModel = require('../models/building-access.model');
 const ParkingAreaModel = require('../models/parking-area.model');
 const logger = require('../../../services/utils/logger.utils');
 
