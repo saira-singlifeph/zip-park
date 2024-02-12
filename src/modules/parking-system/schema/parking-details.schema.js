@@ -12,7 +12,7 @@ const ParkingDetailsSchema = mongoose.Schema(
       default: Date.now(),
     },
     parkedHours: {
-      type: Date,
+      type: Number,
     },
     vehicleType: {
       type: String,
