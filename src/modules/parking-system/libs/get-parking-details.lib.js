@@ -5,6 +5,8 @@ const getParkingDetails = async (referenceNo = null) => {
   logger.info(`getParkingDetails start - payload ${JSON.stringify(referenceNo)}`);
   try {
     const fetchedParkingDetails = await ParkingDetailsModel.getParkingDetails(referenceNo);
+
+    logger.info(`getParkingDetails start - success ${JSON.stringify(fetchedParkingDetails)}`);
     return {
       status: 200,
       data: fetchedParkingDetails,

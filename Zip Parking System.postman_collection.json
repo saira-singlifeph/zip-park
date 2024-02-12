@@ -1,0 +1,448 @@
+{
+	"info": {
+		"_postman_id": "28c7102f-e8ca-4f81-b969-c078861f150f",
+		"name": "Zip Parking System",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "27566716"
+	},
+	"item": [
+		{
+			"name": "Create Parking Area",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"  pm.response.to.have.status(200);",
+							"",
+							"  const response = pm.response.json();",
+							"  pm.environment.set('parkingReferenceNo', response.data.referenceNo);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"parkingAreas\": [\n        {\n            \"level\": 1,\n            \"vacant\": 60,\n            \"occupied\": 0,\n            \"pwdSlots\": [\n                1,\n                10,\n                11,\n                17,\n                26,\n                28,\n                30,\n                23\n            ]\n        },\n        {\n            \"level\": 2,\n            \"vacant\": 50,\n            \"occupied\": 0,\n            \"pwdSlots\": [\n                2,\n                11,\n                12,\n                18,\n                27,\n                29,\n                31,\n                40\n            ]\n        },\n        {\n            \"level\": 3,\n            \"vacant\": 50,\n            \"occupied\": 0,\n            \"pwdSlots\": [\n                2,\n                14,\n                14,\n                19,\n                28,\n                30,\n                31,\n                41\n            ]\n        },\n        {\n            \"level\": 4,\n            \"vacant\": 50,\n            \"occupied\": 0,\n            \"pwdSlots\": [\n                4,\n                15,\n                19,\n                20,\n                23,\n                33,\n                32,\n                40\n            ]\n        },\n        {\n            \"level\": 5,\n            \"vacant\": 50,\n            \"pwdSlots\": []\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:5000/api/v1/car-parking/create-parking-area"
+			},
+			"response": []
+		},
+		{
+			"name": "Car Parking",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"  pm.response.to.have.status(200);",
+							"",
+							"  const response = pm.response.json();",
+							"  pm.environment.set('parkingReferenceNo', response.data.referenceNo);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"vehicleType\": \"4W\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:5000/api/v1/car-parking/process"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Parking Details",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true,
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": {
+						"value": "",
+						"key": "",
+						"in": "query"
+					}
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "x-api-key",
+						"value": "pk_test_ZCylpH7FhNFvLysQvJIOz7",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "secret_key",
+						"value": "sk_test_K1y2Ad6Czx1V24cyDbOGLB",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "Access-Control-Allow-Origin",
+						"value": "*",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"paymentMode\": \"{{paymentMode}}\",\n    \"amountToPay\": \"{{amountToPay}}\",\n    \"referenceNo\": \"{{parkingReferenceNo}}\",\n    \"parkedHours\": \"{{parkedHours}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5000/api/v1/car-parking/details?referenceNumber={{parkingReferenceNo}}",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"car-parking",
+						"details"
+					],
+					"query": [
+						{
+							"key": "referenceNumber",
+							"value": "{{parkingReferenceNo}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Parking Payment",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"  pm.response.to.have.status(200);",
+							"",
+							"  const response = pm.response.json();",
+							"  pm.environment.set('paymentMode', response.data.paymentMode);",
+							"  pm.environment.set('amountToPay', response.data.amountToPay);",
+							"  pm.environment.set('parkedHours', parkedHours);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": {
+						"value": "",
+						"key": "",
+						"in": "query"
+					}
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "x-api-key",
+						"value": "pk_test_ZCylpH7FhNFvLysQvJIOz7",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "secret_key",
+						"value": "sk_test_K1y2Ad6Czx1V24cyDbOGLB",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "Access-Control-Allow-Origin",
+						"value": "*",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"referenceNo\": \"{{parkingReferenceNo}}\",\n    \"paymentType\": \"Cash\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5000/api/v1/car-parking/create-payment",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"car-parking",
+						"create-payment"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Process Parking Payment",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": {
+						"value": "",
+						"key": "",
+						"in": "query"
+					}
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "x-api-key",
+						"value": "pk_test_ZCylpH7FhNFvLysQvJIOz7",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "secret_key",
+						"value": "sk_test_K1y2Ad6Czx1V24cyDbOGLB",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "Access-Control-Allow-Origin",
+						"value": "*",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"paymentMode\": \"{{paymentMode}}\",\n    \"amountToPay\": \"{{amountToPay}}\",\n    \"referenceNo\": \"{{parkingReferenceNo}}\",\n    \"parkedHours\": \"{{parkedHours}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5000/api/v1/car-parking/process-payment",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"car-parking",
+						"process-payment"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create new parking entrance",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": {
+						"value": "",
+						"key": "",
+						"in": "query"
+					}
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "x-api-key",
+						"value": "pk_test_ZCylpH7FhNFvLysQvJIOz7",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "secret_key",
+						"value": "sk_test_K1y2Ad6Czx1V24cyDbOGLB",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "Access-Control-Allow-Origin",
+						"value": "*",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"accessType\": \"door\",\n    \"accessName\": \"E3\",\n    \"located\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5000/api/v1/car-parking/create-access",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"car-parking",
+						"create-access"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
