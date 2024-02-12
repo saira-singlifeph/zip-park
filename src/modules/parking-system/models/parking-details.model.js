@@ -16,7 +16,22 @@ const updateParkingRecord = async (id, data) => {
   return response;
 };
 
+const getParkingDetails = async (referenceNo = null) => {
+  if (referenceNo) {
+    const response = await ParkingDetailsModel.find({ _id: referenceNo });
+    return response;
+  }
+
+  const response = ParkingDetailsModel
+    .find()
+    .where('isPaid')
+    .in(false)
+    .sort({ level: 'desc' });
+  return response;
+};
+
 module.exports = {
   insertParkingRecord,
   updateParkingRecord,
+  getParkingDetails,
 };

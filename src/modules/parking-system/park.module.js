@@ -5,6 +5,14 @@ const processParking = require('./libs/process-car-parking.lib');
 const createParkingPayment = require('./libs/create-parking-payment.lib');
 const processParkingPayment = require('./libs/process-parking-payment.lib');
 const createParkingArea = require('./libs/create-parking-area.lib');
+const getParkingDetails = require('./libs/get-parking-details.lib');
+const createParkingAccess = require('./libs/parking-access.lib');
+
+router.get('/details/:referenceNumber?', async (req, res) => {
+  const refNo = req.query ? req.query.referenceNumber : null;
+  const response = await getParkingDetails(refNo);
+  return res.send({ status: response.status, data: response.data });
+});
 
 /**
  * @swagger
@@ -106,4 +114,10 @@ router.post('/create-parking-area', async (req, res) => {
   const response = await createParkingArea(req.body);
   res.send({ status: response.status, data: response.message });
 });
+
+router.post('/create-access', async (req, res) => {
+  const response = await createParkingAccess(req.body);
+  res.send({ status: response.status, data: response.message });
+});
+
 module.exports = router;
