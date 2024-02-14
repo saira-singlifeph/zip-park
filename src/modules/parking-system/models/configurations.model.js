@@ -1,13 +1,4 @@
-const mongoose = require('mongoose');
 const ConfigurationsModel = require('../schema/configurations.schema');
-
-require('dotenv').config();
-
-const databaseUrl = process.env.DATABASE_URL;
-mongoose.connect(databaseUrl, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
 
 const insertConfiguration = async (payload) => {
   const response = await ConfigurationsModel.create(
@@ -29,7 +20,13 @@ const insertConfigurations = async (configurations) => {
   return response;
 };
 
+const fetchConfigurations = async (where) => {
+  const response = await ConfigurationsModel.find({ ...where });
+  return response;
+};
+
 module.exports = {
   insertConfiguration,
   insertConfigurations,
+  fetchConfigurations,
 };
