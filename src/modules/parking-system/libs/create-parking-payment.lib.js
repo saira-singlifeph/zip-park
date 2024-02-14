@@ -20,7 +20,7 @@ const createParkingPayment = async (payload) => {
     // compute parked hours
     const parkedHours = moment().diff(new Date(startTime), 'hours');
     // get the pricing configurations
-    const configurations = await ConfigurationsModel.findById({ _id: vehicleType.toLowerCase() });
+    const configurations = await ConfigurationsModel.findById({ _id: vehicleType });
 
     let amountToPay = configurations.flatRate;
     let paymentMode = paymentType;
