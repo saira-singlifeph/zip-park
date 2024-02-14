@@ -38,18 +38,36 @@ npm install
 DATABASE_URL='mongodb+srv://<username>:<password>@<clusterName>/?retryWrites=true&w=majority'
 ```
 
+## 6. Import the Postman Collections
+
 ## 5. Populate Configurations Table
 
-After setting up the database, open your terminal, ensure you are in the root directory of your project, and run the following command to populate the configurations table for pricing:
+After setting up the database, open your Postman application and execute the following curl command to populate the configurations table for pricing:
 
-```bash
-nodemon mongodb/index.js --importData
 ```
-
-## 6. Postman Collection
-
-You can use the Postman collection for API Testing [here](https://github.com/saira-singlifeph/zip-park/blob/main/Zip%20Parking%20System.postman_collection.json).
-
+curl --location 'localhost:5000/api/v1/car-parking/create-configurations' \
+--header 'Content-Type: application/json' \
+--header 'Access-Control-Allow-Origin: *' \
+--data '[
+    {
+        "_id": "2W",
+        "vehicleType": "2 wheels",
+        "flatRate": 40,
+        "flatHour": 3,
+        "succeedingRate": 20,
+        "succeedingHour": 1
+    },
+    {
+        "_id": "4W",
+        "vehicleType": "4 wheels",
+        "flatRate": 60,
+        "flatHour": 3,
+        "succeedingRate": 30,
+        "succeedingHour": 1
+    }
+]'
+```
+Alternatively, you can use the Postman collection for API Testing available [here](https://github.com/saira-singlifeph/zip-park/blob/main/Zip%20Parking%20System.postman_collection.json).
 
 ## Usage
 
