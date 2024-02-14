@@ -20,13 +20,13 @@ const insertConfigurations = async (configurations) => {
   return response;
 };
 
-const fetchConfigurations = async (where) => {
-  const response = await ConfigurationsModel.find({ ...where });
+const getsConfigurations = async (type) => {
+  const response = await ConfigurationsModel.findOne({ _id: type });
   return response;
 };
 
 module.exports = {
   insertConfiguration,
   insertConfigurations,
-  fetchConfigurations,
+  getsConfigurations,
 };

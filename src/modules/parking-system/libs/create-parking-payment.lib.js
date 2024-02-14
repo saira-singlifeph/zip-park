@@ -1,52 +1,34 @@
-const moment = require('moment');
-const ParkingDetailsModel = require('../schema/parking-details.schema');
-const ConfigurationsModel = require('../schema/configurations.schema');
-
-// const createSource = require('../../magpie/create-source.payment');
+const ParkingDetailsModel = require('../models/parking-details.model');
+const parkingComputation = require('./parking-computation.lib');
 const { PAYMENT_TYPES } = require('../configurations');
 const logger = require('../../../services/utils/logger.utils');
-
-const { CASH, CASHLESS } = PAYMENT_TYPES;
 
 const createParkingPayment = async (payload) => {
   logger.info(`createParkingPayment start - ${JSON.stringify(payload)}`);
   try {
-    const { referenceNo, paymentType = CASH } = payload;
+    const { referenceNo } = payload;
     const {
       vehicleType,
       startTime,
-    } = await ParkingDetailsModel.findById({ _id: referenceNo });
+    } = await ParkingDetailsModel.getParkingDetails(referenceNo);
 
-    // compute parked hours
-    const parkedHours = moment().diff(new Date(startTime), 'hours');
-    // get the pricing configurations
-    const configurations = await ConfigurationsModel.findById({ _id: vehicleType });
-
-    let amountToPay = configurations.flatRate;
-    let paymentMode = paymentType;
-
-    // const payment = await createSource();
-
-    // validate if parked hours exceeds
-    if (parkedHours >= configurations.flatHour) {
-      const succedingAmount = (parkedHours - configurations.flatHour)
-        * configurations.succedingRate;
-
-      amountToPay += succedingAmount;
-      paymentMode = CASHLESS.GCASH;
-    }
+    const computed = await parkingComputation(startTime, vehicleType);
 
     const createdParkingPayment = {
-      paymentMode,
-      amountToPay,
+      paymentMode: PAYMENT_TYPES.CASH,
+      amountToPay: computed.amountToPay,
       referenceNo,
-      parkedHours: parkedHours || 1,
+      parkedHours: computed.parkedHours || 1,
       // TO DO: Cashless payment
-      vehicleDescription: configurations.vehicleType,
+      vehicleDescription: vehicleType,
     };
     logger.info(`createParkingPayment response - ${JSON.stringify(createdParkingPayment)}`);
-    return { ...createdParkingPayment };
+    return {
+      status: 200,
+      message: { ...createdParkingPayment },
+    };
   } catch (error) {
+    logger.error(`createParkingPayment error - ${JSON.stringify(error.message)}`);
     return {
       status: 500,
       message: error.message,

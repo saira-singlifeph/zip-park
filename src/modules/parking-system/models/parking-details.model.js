@@ -18,7 +18,8 @@ const updateParkingRecord = async (id, data) => {
 
 const getParkingDetails = async (referenceNo = null) => {
   if (referenceNo) {
-    const response = await ParkingDetailsModel.find({ _id: referenceNo });
+    const response = await ParkingDetailsModel.findOne({ _id: referenceNo });
+    console.log('sss', response);
     return response;
   }
 

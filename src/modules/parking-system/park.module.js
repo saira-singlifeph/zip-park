@@ -70,7 +70,9 @@ router.post('/process', async (req, res) => {
  */
 router.post('/create-payment', async (req, res) => {
   const response = await createParkingPayment(req.body);
-  return res.send({ status: 200, data: response });
+  return res.status(response.status).send(
+    { status: response.status, data: response.message },
+  );
 });
 
 /**
