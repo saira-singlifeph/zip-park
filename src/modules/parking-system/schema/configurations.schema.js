@@ -27,6 +27,9 @@ const ConfigurationsSchema = mongoose.Schema(
       require: true,
     },
   },
+  {
+    timestamps: true,
+  },
 );
 
 const Configurations = mongoose.model('Configurations', ConfigurationsSchema);

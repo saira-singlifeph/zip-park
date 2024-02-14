@@ -6,17 +6,50 @@ This parking system is designed for ZipPark, a multi-level parking building in t
 
 ## Installation
 
-To install the parking system, you need to use npm, the package manager for JavaScript. If you don't have npm installed, you can get it from [here](https://www.npmjs.com/).
+```markdown
+# Installation Guide
+
+To install the parking system, follow the steps below:
+
+## 1. Install npm
+
+Make sure you have npm installed, which is the package manager for JavaScript. If you don't have npm installed, you can download and install it from [here](https://www.npmjs.com/).
+
+## 2. Node.js Version
+
+Ensure that your Node.js version is >18 and higher.
+
+## 3. Install Dependencies
+
+Run the following command in your terminal to install the required dependencies:
 
 ```bash
 npm install
 ```
 
-You also need to create a MongoDB Atlas account and set up a database. You can create an account [here](https://www.mongodb.com/cloud/atlas/register) and set up the `.env` file at the root directory:
+## 4. MongoDB Atlas Setup
 
-```
+- Create a MongoDB Atlas account [here](https://www.mongodb.com/cloud/atlas/register).
+- Set up a MongoDB database.
+- Create a `.env` file at the root directory of your project.
+- Add the following line to the `.env` file, replacing `<username>`, `<password>`, and `<clusterName>` with your MongoDB Atlas credentials:
+
+```plaintext
 DATABASE_URL='mongodb+srv://<username>:<password>@<clusterName>/?retryWrites=true&w=majority'
 ```
+
+## 5. Populate Configurations Table
+
+After setting up the database, open your terminal, ensure you are in the root directory of your project, and run the following command to populate the configurations table for pricing:
+
+```bash
+nodemon mongodb/index.js --importData
+```
+
+## 6. Postman Collection
+
+You can use the Postman collection for API Testing [here](https://github.com/saira-singlifeph/zip-park/blob/main/Zip%20Parking%20System.postman_collection.json).
+
 
 ## Usage
 

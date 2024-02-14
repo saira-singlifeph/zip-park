@@ -1,12 +1,12 @@
 const router = require('express').Router();
 
-// libs
 const processParking = require('./libs/process-car-parking.lib');
 const createParkingPayment = require('./libs/create-parking-payment.lib');
 const processParkingPayment = require('./libs/process-parking-payment.lib');
 const createParkingArea = require('./libs/create-parking-area.lib');
 const getParkingDetails = require('./libs/get-parking-details.lib');
 const createParkingAccess = require('./libs/parking-access.lib');
+const createConfigurations = require('./libs/create-configurations.lib');
 
 router.get('/details/:referenceNumber?', async (req, res) => {
   const refNo = req.query ? req.query.referenceNumber : null;
@@ -107,17 +107,131 @@ router.post('/create-payment', async (req, res) => {
  */
 router.post('/process-payment', async (req, res) => {
   const response = await processParkingPayment(req.body);
-  return res.send({ status: 200, data: response });
+  return res.send({ status: response.status, data: response.message });
 });
 
+/**
+* @swagger
+* info:
+*   description: "Swagger comment for Car Parking API"
+*   version: "1.0.0"
+*   title: "Car Parking API"
+* paths:
+*   /api/v1/car-parking/create-parking-area:
+*     post:
+*       description: "Create a parking area"
+*       consumes:
+*         - "application/json"
+*       requestBody:
+*         required: true
+*         content:
+*           application/json:
+*             schema:
+*               type: "object"
+*               required:
+*                 - "parkingAreas"
+*               properties:
+*                 parkingAreas:
+*                   type: "array"
+*                   items:
+*                     type: "object"
+*                     properties:
+*                       level:
+*                         type: "integer"
+*                         required: true
+*                       vacant:
+*                         type: "number"
+*                         required: true
+*                       occupied:
+*                         type: "number"
+*                         required: true
+*                       pwdSlots:
+*                         type: "array"
+*                         required: true
+*                         items:
+*                           type: "integer"
+*       responses:
+*         200:
+*           description: "Successful operation"
+*           schema:
+*             type: "object"
+*             properties: {}
+*         # Add any additional responses here
+*/
 router.post('/create-parking-area', async (req, res) => {
   const response = await createParkingArea(req.body);
-  res.send({ status: response.status, data: response.message });
+  return res.send({ status: response.status, data: response.message });
 });
 
+/**
+* @swagger
+* info:
+*   title: "Access Details"
+*   version: "1.0.0"
+*   description: "Swagger documentation for access details"
+* paths:
+*   /access:
+*     post:
+*       summary: "Create access details"
+*       description: "Endpoint to create access details"
+*       consumes:
+*         - "application/json"
+*       produces:
+*         - "application/json"
+*       parameters:
+*         - in: "body"
+*           name: "body"
+*           description: "Access details object"
+*           required: true
+*           schema:
+*             type: "object"
+*             properties:
+*               accessType:
+*                 type: "string"
+*                 example: "exit"
+*               accessName:
+*                 type: "string"
+*                 example: "E3"
+*               located:
+*                 type: "integer"
+*                 example: 1
+*       responses:
+*         200:
+*           description: "Access details created successfully"
+*           schema:
+*             type: "object"
+*             properties: {}
+ */
 router.post('/create-access', async (req, res) => {
   const response = await createParkingAccess(req.body);
-  res.send({ status: response.status, data: response.message });
+  return res.send({ status: response.status, data: response.message });
+});
+
+/**
+* @swagger
+* info:
+*   title: Car Parking API
+*   description: API for managing car parking configurations
+*   version: 1.0.0
+* servers:
+*   - url: http:*localhost:5000/api/v1
+* paths:
+*   /car-parking/create-configurations:
+*     post:
+*       summary: Create parking configurations
+*       requestBody:
+*         required: true
+*         content:
+*           application/json:
+*             schema:
+*               type: array
+*               items:
+*                 type: object
+*/
+
+router.post('/create-configurations', async (req, res) => {
+  const response = await createConfigurations(req.body);
+  return res.send({ status: response.status, message: response.message });
 });
 
 module.exports = router;

@@ -7,7 +7,7 @@ const createSource = async () => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Basic ${Buffer.from('espinosairabunny@gmail.com:&3?=Ks$kwA4##wU').toString('base64')}`,
+        Authorization: `Basic ${Buffer.from('<>').toString('base64')}`,
       },
       body: JSON.stringify({
         currency: 'php',
