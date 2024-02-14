@@ -5,7 +5,7 @@ const logger = require('../../../services/utils/logger.utils');
 const getParkingCounts = async () => {
   logger.info('getParkingCounts - start');
   try {
-    const unpaidParkings = await ParkingDetailsModel.getParkingDetails({ paidStatus: true });
+    const unpaidParkings = await ParkingDetailsModel.getParkingDetails({ paidStatus: false });
     const availabe = await ParkingAreaModel.getAvailableSlot(true);
 
     const totalVacant = availabe.reduce((sum, item) => sum + item.vacant, 0);
