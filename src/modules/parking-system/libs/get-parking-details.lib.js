@@ -5,7 +5,7 @@ const logger = require('../../../services/utils/logger.utils');
 const getParkingDetails = async (referenceNo = null) => {
   logger.info(`getParkingDetails start - payload ${JSON.stringify(referenceNo)}`);
   try {
-    const fetchedParkingDetails = await ParkingDetailsModel.getParkingDetails(referenceNo);
+    const fetchedParkingDetails = await ParkingDetailsModel.getParkingDetails({ referenceNo });
 
     if (referenceNo) {
       const runningBill = await parkingComputation(

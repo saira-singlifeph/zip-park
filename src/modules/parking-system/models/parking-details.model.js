@@ -16,7 +16,9 @@ const updateParkingRecord = async (id, data) => {
   return response;
 };
 
-const getParkingDetails = async (referenceNo = null) => {
+const getParkingDetails = async ({
+  referenceNo = null, paidStatus = false,
+}) => {
   if (referenceNo) {
     const response = await ParkingDetailsModel.findOne({ _id: referenceNo });
     return response;
@@ -25,7 +27,7 @@ const getParkingDetails = async (referenceNo = null) => {
   const response = ParkingDetailsModel
     .find()
     .where('isPaid')
-    .in(false)
+    .in(paidStatus)
     .sort({ level: 'desc' });
   return response;
 };

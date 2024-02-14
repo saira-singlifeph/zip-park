@@ -7,6 +7,12 @@ const createParkingArea = require('./libs/create-parking-area.lib');
 const getParkingDetails = require('./libs/get-parking-details.lib');
 const createParkingAccess = require('./libs/parking-access.lib');
 const createConfigurations = require('./libs/create-configurations.lib');
+const getParkingCounts = require('./libs/get-parking-counts.lib');
+
+router.get('/counts', async (req, res) => {
+  const response = await getParkingCounts();
+  return res.send({ status: response.status, message: response.message });
+});
 
 router.get('/details/:referenceNumber?', async (req, res) => {
   const refNo = req.query ? req.query.referenceNumber : null;

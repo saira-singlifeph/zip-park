@@ -16,7 +16,13 @@ const insertManyParkingArea = async (data) => {
   return response;
 };
 
-const getAvailableSlot = async () => {
+const getAvailableSlot = async (isFetchAll = false) => {
+  if (isFetchAll) {
+    const response = ParkingAreaModel
+      .find({ vacant: { $ne: 0 } })
+      .sort({ level: 'asc' });
+    return response;
+  }
   const response = ParkingAreaModel
     .findOne({ vacant: { $ne: 0 } })
     .sort({ level: 'asc' });

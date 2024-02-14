@@ -10,7 +10,7 @@ const createParkingPayment = async (payload) => {
     const {
       vehicleType,
       startTime,
-    } = await ParkingDetailsModel.getParkingDetails(referenceNo);
+    } = await ParkingDetailsModel.getParkingDetails({ referenceNo });
 
     const computed = await parkingComputation(startTime, vehicleType);
 
