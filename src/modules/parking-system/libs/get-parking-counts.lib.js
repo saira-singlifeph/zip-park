@@ -11,7 +11,7 @@ const getParkingCounts = async () => {
     const totalVacant = availabe.reduce((sum, item) => sum + item.vacant, 0);
     const count = {
       occupied: unpaidParkings.length,
-      availabe: totalVacant,
+      available: totalVacant,
     };
 
     logger.info('getParkingCounts - success', count);
