@@ -11,7 +11,7 @@ const getParkingCounts = require('./libs/get-parking-counts.lib');
 
 router.get('/counts', async (req, res) => {
   const response = await getParkingCounts();
-  return res.send({ status: response.status, message: response.message });
+  return res.send({ status: response.status, data: response.message });
 });
 
 router.get('/details/:referenceNumber?', async (req, res) => {
