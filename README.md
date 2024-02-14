@@ -38,7 +38,6 @@ npm install
 DATABASE_URL='mongodb+srv://<username>:<password>@<clusterName>/?retryWrites=true&w=majority'
 ```
 
-## 6. Import the Postman Collections
 
 ## 5. Populate Configurations Table
 
@@ -67,7 +66,7 @@ curl --location 'localhost:5000/api/v1/car-parking/create-configurations' \
     }
 ]'
 ```
-Alternatively, you can use the Postman collection for API Testing available [here](https://github.com/saira-singlifeph/zip-park/blob/main/Zip%20Parking%20System.postman_collection.json).
+Alternatively, you can use the Postman collections and environment for API Testing available [here](https://github.com/saira-singlifeph/zip-park/tree/main/Postman%20Collection).
 
 ## Usage
 
